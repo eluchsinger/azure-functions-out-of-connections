@@ -8,14 +8,13 @@ using Microsoft.Extensions.Logging;
 
 namespace FunctionConnectionExhaustion
 {
-    public static class CallerFunction
+    public static class CallerFunctionHttpFactory
     {
-        [Function("CallerFunction")]
+        [Function("CallerFunctionHttpFactory")]
         public static async Task<HttpResponseData> Run(
             [HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req,
             FunctionContext executionContext)
         {
-
             const int amountOfCalls = 1250;
 
             var connector = executionContext.InstanceServices.GetRequiredService<Connector>();
@@ -30,7 +29,6 @@ namespace FunctionConnectionExhaustion
             
             var response = req.CreateResponse(HttpStatusCode.OK);
             return response;
-            
         }
     }
 }
