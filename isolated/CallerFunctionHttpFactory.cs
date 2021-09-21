@@ -21,7 +21,7 @@ namespace FunctionConnectionExhaustion
             var tasks = new List<Task>(amountOfCalls);
             for (var i = 0; i < amountOfCalls; i++)
             {
-                var task = connector.DoRequest();
+                var task = connector.DoRequest(i);
                 tasks.Add(task);
             }
 

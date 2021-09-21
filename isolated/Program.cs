@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Azure.Functions.Worker.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Net.Http;
 
 namespace FunctionConnectionExhaustion
 {
@@ -15,7 +16,12 @@ namespace FunctionConnectionExhaustion
                 .ConfigureServices(services =>
                 {
                     services.AddScoped<Connector>();
-                    services.AddHttpClient<Connector>();
+                    services.AddHttpClient<Connector>()
+                        .ConfigurePrimaryHttpMessageHandler(() =>{
+                            return new SocketsHttpHandler() {
+                                MaxConnectionsPerServer = 100
+                            };
+                        });
                 })
                 .Build();
 

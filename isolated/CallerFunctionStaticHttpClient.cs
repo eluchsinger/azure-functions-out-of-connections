@@ -11,7 +11,13 @@ namespace FunctionConnectionExhaustion
 {
     public static class CallerFunctionStaticHttpClient
     {
-        private static readonly HttpClient staticHttpClient = new HttpClient();
+        private static readonly HttpClient staticHttpClient;
+
+        static CallerFunctionStaticHttpClient() {
+            var socketsHttpHandler = new SocketsHttpHandler();
+            socketsHttpHandler.MaxConnectionsPerServer = 100;
+            staticHttpClient = new HttpClient(socketsHttpHandler);
+        }
 
         [Function("CallerFunctionStaticHttpClient")]
         public static async Task<HttpResponseData> RunAsync([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req,
@@ -24,7 +30,7 @@ namespace FunctionConnectionExhaustion
             var tasks = new List<Task>(amountOfCalls);
             for (var i = 0; i < amountOfCalls; i++)
             {
-                var task = connector.DoRequest();
+                var task = connector.DoRequest(i);
                 tasks.Add(task);
             }
 

@@ -18,12 +18,15 @@ namespace FunctionConnectionExhaustion
             this.logger = logger;
         }
 
-        public async Task<HttpResponseMessage> DoRequest()
+        public async Task<HttpResponseMessage> DoRequest(int requestId)
         {
+            logger.LogInformation("Start Request: {REQUEST_ID}", requestId);
             var response = await httpClient.PostAsync(TargetUrl, new StringContent("Hello World!"));
 
             if (response.IsSuccessStatusCode)
-                logger.LogInformation("Call successful");
+                logger.LogInformation("Request successful: {REQUEST_ID}", requestId);
+            else 
+                logger.LogError("Request failed: {REQUEST_ID}", requestId);
 
             return response;
         }
